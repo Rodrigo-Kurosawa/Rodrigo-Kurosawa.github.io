@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rodrigo Kurosawa — Engenharia de Computação · USP</title>
+<meta name="description" content="Portfólio de Rodrigo Kurosawa — Engenharia de Computação EESC/ICMC USP. Visão computacional, robótica, machine learning e desenvolvimento web.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#06070E;
+  --surface:#0C0F1D;
+  --surface-2:#12162A;
+  --line:rgba(140,150,200,.14);
+  --text:#E8EAF6;
+  --text-dim:#9AA1C0;
+  --violet:#7B61FF;
+  --teal:#4EE1C4;
+  --glow:rgba(123,97,255,.35);
+  --display:'Unbounded',sans-serif;
+  --body:'Space Grotesk',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);
+  color:var(--text);
+  font-family:var(--body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--violet);color:#fff}
+
+/* ---------- Partículas ---------- */
+#field{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ---------- Barra de progresso ---------- */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:100;
+  background:linear-gradient(90deg,var(--violet),var(--teal));
+  box-shadow:0 0 12px var(--glow)}
+
+/* ---------- Navegação ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.1rem clamp(1.2rem,5vw,4rem);
+  background:rgba(6,7,14,.6);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.logo{font-family:var(--mono);font-size:.9rem;color:var(--text);text-decoration:none;letter-spacing:.05em}
+.logo b{color:var(--teal);font-weight:500}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  font-family:var(--mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--text-dim);text-decoration:none;position:relative;padding:.25rem 0;
+  transition:color .25s;
+}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:0;height:1px;width:0;
+  background:linear-gradient(90deg,var(--violet),var(--teal));
+  transition:width .3s ease;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+#burger{display:none;background:none;border:0;cursor:pointer;z-index:95}
+#burger span{display:block;width:24px;height:2px;background:var(--text);margin:5px 0;transition:.3s}
+
+/* ---------- Hero ---------- */
+main{position:relative;z-index:1}
+section{padding:clamp(5rem,10vw,8rem) clamp(1.2rem,7vw,7rem);max-width:1200px;margin:0 auto}
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding-top:8rem;position:relative;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:.8rem;color:var(--teal);
+  letter-spacing:.2em;text-transform:uppercase;margin-bottom:1.4rem;
+  display:flex;align-items:center;gap:.7rem;
+}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--teal)}
+h1{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(2rem,6.2vw,4.2rem);
+  line-height:1.08;letter-spacing:-.01em;
+  background:linear-gradient(120deg,#fff 30%,var(--violet) 75%,var(--teal));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  max-width:18ch;
+}
+.hero-role{
+  margin-top:1.6rem;font-family:var(--mono);font-size:clamp(.95rem,2vw,1.15rem);
+  color:var(--text-dim);min-height:1.8em;
+}
+.hero-role .cursor{display:inline-block;width:9px;height:1.15em;background:var(--teal);
+  vertical-align:text-bottom;margin-left:3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero-desc{margin-top:1.4rem;max-width:58ch;color:var(--text-dim);font-size:1.05rem}
+.hero-cta{margin-top:2.6rem;display:flex;gap:1rem;flex-wrap:wrap}
+.btn{
+  font-family:var(--mono);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.9rem 1.8rem;border-radius:2px;text-decoration:none;
+  transition:transform .25s,box-shadow .25s,background .25s;
+  will-change:transform;
+}
+.btn-primary{
+  color:#06070E;background:linear-gradient(90deg,var(--teal),var(--violet));
+  box-shadow:0 0 24px rgba(78,225,196,.25);
+}
+.btn-primary:hover{box-shadow:0 0 40px rgba(123,97,255,.45)}
+.btn-ghost{color:var(--text);border:1px solid var(--line);background:rgba(255,255,255,.02)}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.25em;color:var(--text-dim);
+  text-transform:uppercase;animation:float 2.4s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translate(-50%,8px)}}
+
+/* ---------- Cabeçalhos de seção ---------- */
+.sec-head{margin-bottom:3.2rem}
+.sec-tag{font-family:var(--mono);font-size:.78rem;color:var(--violet);letter-spacing:.2em;text-transform:uppercase}
+.sec-head h2{
+  font-family:var(--display);font-weight:500;font-size:clamp(1.6rem,4vw,2.4rem);
+  margin-top:.6rem;letter-spacing:-.01em;
+}
+
+/* ---------- Sobre ---------- */
+.about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:3.5rem;align-items:start}
+.about-text p{color:var(--text-dim);margin-bottom:1.2rem;font-size:1.03rem}
+.about-text strong{color:var(--text);font-weight:600}
+.stat-panel{
+  border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:linear-gradient(160deg,var(--surface),var(--surface-2));
+}
+.stat{padding:1.4rem 1.6rem;border-bottom:1px solid var(--line)}
+.stat:last-child{border-bottom:0}
+.stat b{font-family:var(--display);font-weight:500;font-size:1.5rem;color:var(--teal);display:block}
+.stat span{font-family:var(--mono);font-size:.75rem;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- Timeline (Experiência / Formação) ---------- */
+.timeline{position:relative;padding-left:2.2rem}
+.timeline::before{
+  content:'';position:absolute;left:6px;top:6px;bottom:6px;width:1px;
+  background:linear-gradient(180deg,var(--violet),var(--teal),transparent);
+}
+.t-item{position:relative;padding-bottom:2.8rem}
+.t-item:last-child{padding-bottom:0}
+.t-item::before{
+  content:'';position:absolute;left:-2.2rem;top:8px;width:13px;height:13px;border-radius:50%;
+  background:var(--void);border:2px solid var(--teal);
+  box-shadow:0 0 12px rgba(78,225,196,.5);
+}
+.t-date{font-family:var(--mono);font-size:.75rem;color:var(--teal);letter-spacing:.1em}
+.t-item h3{font-size:1.15rem;font-weight:600;margin:.35rem 0 .15rem}
+.t-org{font-family:var(--mono);font-size:.85rem;color:var(--violet)}
+.t-loc{font-family:var(--mono);font-size:.72rem;color:var(--text-dim);display:block;margin-top:.15rem}
+.t-item p{color:var(--text-dim);font-size:.97rem;margin-top:.6rem;max-width:64ch}
+.t-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+.tag{
+  font-family:var(--mono);font-size:.7rem;padding:.28rem .7rem;border-radius:2px;
+  color:var(--text-dim);border:1px solid var(--line);background:rgba(255,255,255,.02);
+  transition:border-color .25s,color .25s;
+}
+.tag:hover{border-color:var(--violet);color:var(--text)}
+
+/* ---------- Áreas de atuação ---------- */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.4rem}
+.card{
+  position:relative;border:1px solid var(--line);border-radius:8px;
+  padding:1.8rem;background:linear-gradient(160deg,var(--surface),var(--surface-2));
+  transition:transform .2s ease-out,border-color .3s;
+  transform-style:preserve-3d;will-change:transform;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .35s;
+  background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(123,97,255,.14),transparent 45%);
+  pointer-events:none;
+}
+.card:hover::before{opacity:1}
+.card:hover{border-color:rgba(123,97,255,.5)}
+.card-num{font-family:var(--mono);font-size:.72rem;color:var(--teal);letter-spacing:.15em}
+.card h3{font-size:1.2rem;margin:.7rem 0 .5rem;font-weight:600}
+.card p{color:var(--text-dim);font-size:.94rem}
+.card .t-tags{margin-top:1.1rem}
+
+/* ---------- Skills ---------- */
+.skill-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2.4rem}
+.skill-col h3{
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--violet);margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--line);
+}
+.skill-col ul{list-style:none}
+.skill-col li{
+  color:var(--text-dim);font-size:.95rem;padding:.4rem 0;display:flex;align-items:center;gap:.7rem;
+}
+.skill-col li::before{content:'▸';color:var(--teal);font-size:.7rem}
+
+/* ---------- Certificação ---------- */
+.cert{
+  display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:8px;padding:1.6rem 1.8rem;margin-top:2.6rem;
+  background:linear-gradient(160deg,var(--surface),var(--surface-2));
+}
+.cert-score{
+  font-family:var(--display);font-weight:700;font-size:2rem;
+  background:linear-gradient(90deg,var(--teal),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  white-space:nowrap;
+}
+.cert-info h3{font-size:1.05rem;font-weight:600}
+.cert-info p{color:var(--text-dim);font-size:.9rem;margin-top:.2rem}
+.cert-info .t-date{display:block;margin-top:.4rem}
+
+/* ---------- Contato ---------- */
+.contact{text-align:center;padding-bottom:6rem}
+.contact h2{
+  font-family:var(--display);font-weight:500;font-size:clamp(1.8rem,5vw,3rem);
+  max-width:20ch;margin:0 auto 1.2rem;
+}
+.contact p{color:var(--text-dim);max-width:48ch;margin:0 auto 2.4rem}
+.socials{display:flex;justify-content:center;gap:1.4rem;margin-top:2.6rem;flex-wrap:wrap}
+.socials a{
+  font-family:var(--mono);font-size:.8rem;color:var(--text-dim);text-decoration:none;
+  letter-spacing:.1em;text-transform:uppercase;transition:color .25s;
+}
+.socials a:hover{color:var(--teal)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:2rem;
+  font-family:var(--mono);font-size:.72rem;color:var(--text-dim);
+  border-top:1px solid var(--line);
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- Responsivo ---------- */
+@media (max-width:760px){
+  .nav-links{
+    position:fixed;inset:0;background:rgba(6,7,14,.97);
+    flex-direction:column;justify-content:center;align-items:center;gap:2.2rem;
+    transform:translateX(100%);transition:transform .35s ease;
+  }
+  .nav-links.open{transform:none}
+  .nav-links a{font-size:1rem}
+  #burger{display:block}
+  #burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  #burger.open span:nth-child(2){opacity:0}
+  #burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .about-grid{grid-template-columns:1fr}
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div id="progress" aria-hidden="true"></div>
+
+<nav>
+  <a class="logo" href="#topo"><b>~/</b>rodrigo.kurosawa</a>
+  <button id="burger" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#experiencia">Experiência</a></li>
+    <li><a href="#formacao">Formação</a></li>
+    <li><a href="#areas">Áreas</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<main id="topo">
+
+  <section class="hero">
+    <p class="hero-eyebrow">Portfólio · Engenharia de Computação · USP</p>
+    <h1>Rodrigo Kurosawa</h1>
+    <p class="hero-role"><span id="typed"></span><span class="cursor"></span></p>
+    <p class="hero-desc">
+      Estudante do 4º ano de Engenharia de Computação na EESC/ICMC — USP São Carlos.
+      Transito entre visão computacional aplicada a imagens médicas, robótica aérea
+      autônoma, machine learning e desenvolvimento web.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#experiencia">Ver experiências</a>
+      <a class="btn btn-ghost" href="#contato">Entrar em contato</a>
+    </div>
+    <span class="scroll-hint">scroll ↓</span>
+  </section>
+
+  <section id="sobre">
+    <div class="sec-head reveal">
+      <span class="sec-tag">01 · Sobre</span>
+      <h2>Da pesquisa ao produto</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>Sou estudante de <strong>Engenharia de Computação</strong> na USP
+        (EESC/ICMC, São Carlos), onde combino formação em hardware, software e
+        matemática com experiências práticas em pesquisa e extensão.</p>
+        <p>Atualmente faço <strong>iniciação científica em visão computacional</strong>
+        no Centro de Robótica da USP (CROB), aplicando modelos de machine learning
+        a um problema real de medicina legal. Antes disso, desenvolvi
+        <strong>software embarcado e controle para drones autônomos</strong> no
+        Grupo SEMEAR e liderei o front-end da loja da
+        <strong>SAEComp</strong>, a secretaria acadêmica do curso.</p>
+      </div>
+      <div class="stat-panel reveal">
+        <div class="stat"><b>4º ano</b><span>Eng. Computação · EESC/ICMC USP</span></div>
+        <div class="stat"><b>2+ anos</b><span>em pesquisa e extensão</span></div>
+        <div class="stat"><b>107/120</b><span>TOEFL iBT · inglês C1</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experiencia">
+    <div class="sec-head reveal">
+      <span class="sec-tag">02 · Experiência técnica</span>
+      <h2>Trajetória</h2>
+    </div>
+    <div class="timeline">
+      <div class="t-item reveal">
+        <span class="t-date">ago 2025 — presente</span>
+        <h3>Assistente de Pesquisa</h3>
+        <span class="t-org">USP Center for Robotics — CROB</span>
+        <span class="t-loc">São Carlos, SP · Presencial</span>
+        <p>Iniciação científica no laboratório de robótica da USP, em parceria com
+        o IML de Goiânia, para identificação de gênero de cadáveres com modelos
+        de machine learning aplicados a imagens médicas.</p>
+        <div class="t-tags">
+          <span class="tag">Computer Vision</span><span class="tag">YOLO</span>
+          <span class="tag">Machine Learning</span><span class="tag">Imagens médicas</span>
+        </div>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-date">mar 2025 — mar 2026</span>
+        <h3>Membro da Diretoria Técnica</h3>
+        <span class="t-org">SAEComp — Secretaria Acadêmica da Eng. de Computação (USP/ICMC)</span>
+        <span class="t-loc">São Carlos, SP · Presencial</span>
+        <p>Atuei no front-end da Diretoria Técnica, sendo responsável pela
+        arquitetura da aplicação e pelo design da loja de produtos — da
+        estruturação das telas à experiência do usuário.</p>
+        <div class="t-tags">
+          <span class="tag">React</span><span class="tag">HTML5</span>
+          <span class="tag">Front-end</span><span class="tag">UX</span>
+        </div>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-date">mar 2024 — 2026</span>
+        <h3>Membro do Núcleo de Robótica Aérea</h3>
+        <span class="t-org">Grupo SEMEAR — EESC/USP</span>
+        <span class="t-loc">São Carlos, SP</span>
+        <p>Desenvolvimento de software embarcado e controle para veículos aéreos
+        autônomos, com foco em drones: algoritmos em Python, simulação e testes
+        de navegação autônoma no Gazebo com ROS, além da integração e
+        comunicação de sensores.</p>
+        <div class="t-tags">
+          <span class="tag">ROS</span><span class="tag">Gazebo</span>
+          <span class="tag">Python</span><span class="tag">Sistemas embarcados</span>
+          <span class="tag">Drones</span>
+        </div>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-date">mar 2025 — jul 2025</span>
+        <h3>Monitor de Estrutura de Dados II</h3>
+        <span class="t-org">Instituto de Ciências Matemáticas e de Computação (ICMC) — USP</span>
+        <span class="t-loc">São Carlos, SP</span>
+        <p>Monitor departamental da disciplina: plantões de dúvidas e resolução
+        de exercícios com os alunos.</p>
+        <div class="t-tags">
+          <span class="tag">Estruturas de dados</span><span class="tag">Algoritmos</span>
+          <span class="tag">Ensino</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="formacao">
+    <div class="sec-head reveal">
+      <span class="sec-tag">03 · Formação acadêmica</span>
+      <h2>Base científica</h2>
+    </div>
+    <div class="timeline">
+      <div class="t-item reveal">
+        <span class="t-date">4º ano · em andamento</span>
+        <h3>Bacharelado em Engenharia de Computação</h3>
+        <span class="t-org">EESC / ICMC — Universidade de São Paulo, São Carlos</span>
+        <p>Curso interunidades que une a Escola de Engenharia de São Carlos e o
+        Instituto de Ciências Matemáticas e de Computação, com formação em
+        hardware, software, controle e computação. Envolvimento em iniciação
+        científica, grupo de extensão em robótica e monitoria.</p>
+        <div class="t-tags">
+          <span class="tag">Iniciação científica</span><span class="tag">Extensão</span>
+          <span class="tag">Monitoria</span>
+        </div>
+      </div>
+    </div>
+    <div class="cert reveal">
+      <span class="cert-score">107/120</span>
+      <div class="cert-info">
+        <h3>TOEFL iBT — ETS</h3>
+        <p>Proficiência avançada em inglês (C1, próximo de C2).</p>
+        <span class="t-date">Emitido em jan 2026 · válido até jan 2028</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="areas">
+    <div class="sec-head reveal">
+      <span class="sec-tag">04 · Áreas de atuação</span>
+      <h2>Onde já coloquei a mão na massa</h2>
+    </div>
+    <div class="proj-grid">
+      <article class="card reveal" data-tilt>
+        <span class="card-num">A.01</span>
+        <h3>Imagens médicas</h3>
+        <p>Visão computacional aplicada à medicina legal: modelos de detecção e
+        classificação para identificação de gênero em parceria com o IML de Goiânia.</p>
+        <div class="t-tags"><span class="tag">YOLO</span><span class="tag">Computer Vision</span></div>
+      </article>
+      <article class="card reveal" data-tilt>
+        <span class="card-num">A.02</span>
+        <h3>Robótica</h3>
+        <p>Drones autônomos: software embarcado, controle, integração de sensores
+        e simulação de navegação autônoma em ambiente virtual.</p>
+        <div class="t-tags"><span class="tag">ROS</span><span class="tag">Gazebo</span><span class="tag">Embarcados</span></div>
+      </article>
+      <article class="card reveal" data-tilt>
+        <span class="card-num">A.03</span>
+        <h3>Machine Learning</h3>
+        <p>Treinamento e avaliação de modelos para problemas reais, do pré-processamento
+        de dados à análise de resultados em pesquisa científica.</p>
+        <div class="t-tags"><span class="tag">Python</span><span class="tag">Deep learning</span></div>
+      </article>
+      <article class="card reveal" data-tilt>
+        <span class="card-num">A.04</span>
+        <h3>Desenvolvimento web</h3>
+        <p>Front-end de produção: arquitetura de aplicação, design de interface e
+        experiência do usuário na loja da SAEComp.</p>
+        <div class="t-tags"><span class="tag">React</span><span class="tag">HTML5</span><span class="tag">UX</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head reveal">
+      <span class="sec-tag">05 · Skills</span>
+      <h2>Caixa de ferramentas</h2>
+    </div>
+    <div class="skill-cols">
+      <div class="skill-col reveal">
+        <h3>Linguagens</h3>
+        <ul><li>Python</li><li>C / C++</li><li>JavaScript</li><li>HTML5 / CSS</li></ul>
+      </div>
+      <div class="skill-col reveal">
+        <h3>ML & Visão</h3>
+        <ul><li>YOLO · Computer Vision</li><li>Machine Learning</li><li>Processamento de imagens médicas</li></ul>
+      </div>
+      <div class="skill-col reveal">
+        <h3>Robótica & Web</h3>
+        <ul><li>ROS · Gazebo</li><li>Sistemas embarcados</li><li>React · Front-end</li><li>Inglês avançado (C1)</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="contact">
+    <span class="sec-tag reveal">06 · Contato</span>
+    <h2 class="reveal">Vamos construir algo juntos?</h2>
+    <p class="reveal">Aberto a oportunidades de estágio, pesquisa e projetos em
+    visão computacional, robótica e desenvolvimento de software.</p>
+    <a class="btn btn-primary reveal" href="mailto:rodrigokurosawa@usp.br">Enviar e-mail</a>
+    <div class="socials reveal">
+      <a href="https://www.linkedin.com/in/rodrigo-kurosawa-36207830b/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/Rodrigo-Kurosawa" target="_blank" rel="noopener">GitHub</a>
+      <a href="http://lattes.cnpq.br/4174565598139041" target="_blank" rel="noopener">Lattes</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>© 2026 Rodrigo Kurosawa · São Carlos, SP</footer>
+
+<script>
+/* ===== Preferência de movimento ===== */
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ===== Campo de partículas (assinatura visual) ===== */
+const canvas = document.getElementById('field');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [], mouse = {x:-9999, y:-9999};
+
+function resize(){
+  W = canvas.width = innerWidth * devicePixelRatio;
+  H = canvas.height = innerHeight * devicePixelRatio;
+  canvas.style.width = innerWidth+'px';
+  canvas.style.height = innerHeight+'px';
+  const n = Math.min(110, Math.floor(innerWidth/12));
+  pts = Array.from({length:n}, () => ({
+    x: Math.random()*W, y: Math.random()*H,
+    vx: (Math.random()-.5)*.35*devicePixelRatio,
+    vy: (Math.random()-.5)*.35*devicePixelRatio,
+    r: (Math.random()*1.4+.6)*devicePixelRatio
+  }));
+}
+resize();
+addEventListener('resize', resize);
+addEventListener('pointermove', e => {
+  mouse.x = e.clientX*devicePixelRatio;
+  mouse.y = e.clientY*devicePixelRatio;
+});
+addEventListener('pointerleave', () => { mouse.x = mouse.y = -9999; });
+
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  const linkDist = 130*devicePixelRatio, mouseDist = 190*devicePixelRatio;
+  for(const p of pts){
+    p.x += p.vx; p.y += p.vy;
+    if(p.x<0||p.x>W) p.vx*=-1;
+    if(p.y<0||p.y>H) p.vy*=-1;
+    // leve atração ao cursor
+    const dx = mouse.x-p.x, dy = mouse.y-p.y, d = Math.hypot(dx,dy);
+    if(d < mouseDist && d > 1){ p.x += dx/d*.35; p.y += dy/d*.35; }
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fillStyle = 'rgba(155,140,255,.55)';
+    ctx.fill();
+  }
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const a=pts[i], b=pts[j];
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if(d < linkDist){
+        const alpha = (1 - d/linkDist)*.35;
+        ctx.strokeStyle = `rgba(78,225,196,${alpha})`;
+        ctx.lineWidth = devicePixelRatio*.6;
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      }
+    }
+  }
+  // fio até o cursor
+  for(const p of pts){
+    const d = Math.hypot(mouse.x-p.x, mouse.y-p.y);
+    if(d < mouseDist){
+      ctx.strokeStyle = `rgba(123,97,255,${(1-d/mouseDist)*.5})`;
+      ctx.lineWidth = devicePixelRatio*.7;
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mouse.x,mouse.y); ctx.stroke();
+    }
+  }
+  requestAnimationFrame(frame);
+}
+if(!reduced) frame();
+else { // versão estática para quem prefere menos movimento
+  for(const p of pts){ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7);
+    ctx.fillStyle='rgba(155,140,255,.4)'; ctx.fill(); }
+}
+
+/* ===== Efeito de digitação ===== */
+const roles = [
+  'Engenharia de Computação · EESC/ICMC USP',
+  'Visão computacional & imagens médicas',
+  'Robótica aérea · ROS & Gazebo',
+  'Machine learning aplicado',
+  'Desenvolvimento web · React'
+];
+const typed = document.getElementById('typed');
+if(reduced){ typed.textContent = roles[0]; }
+else {
+  let ri=0, ci=0, del=false;
+  (function type(){
+    const word = roles[ri];
+    typed.textContent = word.slice(0, ci);
+    if(!del && ci < word.length){ ci++; setTimeout(type, 55); }
+    else if(!del){ del=true; setTimeout(type, 1800); }
+    else if(ci > 0){ ci--; setTimeout(type, 28); }
+    else { del=false; ri=(ri+1)%roles.length; setTimeout(type, 350); }
+  })();
+}
+
+/* ===== Reveal on scroll ===== */
+const io = new IntersectionObserver(entries => {
+  for(const e of entries) if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ===== Barra de progresso + link ativo ===== */
+const bar = document.getElementById('progress');
+const secs = [...document.querySelectorAll('section[id]')];
+const navA = [...document.querySelectorAll('.nav-links a')];
+addEventListener('scroll', () => {
+  const h = document.documentElement;
+  bar.style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  let cur = '';
+  for(const s of secs) if(scrollY >= s.offsetTop - 200) cur = s.id;
+  navA.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+cur));
+},{passive:true});
+
+/* ===== Tilt 3D nos cards ===== */
+if(!reduced && matchMedia('(pointer:fine)').matches){
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX-r.left)/r.width, y = (e.clientY-r.top)/r.height;
+      card.style.transform = `perspective(800px) rotateY(${(x-.5)*8}deg) rotateX(${(.5-y)*8}deg) translateY(-3px)`;
+      card.style.setProperty('--mx', x*100+'%');
+      card.style.setProperty('--my', y*100+'%');
+    });
+    card.addEventListener('pointerleave', () => card.style.transform = '');
+  });
+}
+
+/* ===== Menu mobile ===== */
+const burger = document.getElementById('burger');
+const links = document.getElementById('navLinks');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  links.classList.toggle('open');
+});
+links.addEventListener('click', e => {
+  if(e.target.tagName === 'A'){ burger.classList.remove('open'); links.classList.remove('open'); }
+});
+</script>
+</body>
+</html>
